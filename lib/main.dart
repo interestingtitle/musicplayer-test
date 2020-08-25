@@ -26,7 +26,7 @@ class FileDownloader extends StatefulWidget {
 
 class _FileDownloaderState extends State<FileDownloader> {
 
-  final imgUrl = "https://images6.alphacoders.com/683/thumb-1920-683023.jpg";
+  final imgUrl = "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
   bool downloading = false;
   var progress = "";
   var path = "No Data";
@@ -35,7 +35,6 @@ class _FileDownloaderState extends State<FileDownloader> {
   var _onPressed;
   static final Random random = Random();
   Directory externalDir;
-
   @override
   void initState() {
     super.initState();
@@ -134,5 +133,3 @@ class _FileDownloaderState extends State<FileDownloader> {
             ],
           )));
 }
-
-enter image description here
