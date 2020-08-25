@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' show get;
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:audioplayer/audioplayer.dart';
 
 void main() => runApp(MyApp());
 
@@ -65,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
     writeImg.writeAsBytesSync(imgResponse.bodyBytes);
 
     //
+
     setState(() {
       imageData = '/storage/emulated/0/testDownload/images/pic.png';
       dataLoaded = true;
@@ -76,7 +78,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     if (dataLoaded) {
+      AudioPlayer playAudio = AudioPlayer();
+      playAudio.play('/storage/emulated/0/testDownload/images/test.mp3');
       return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
