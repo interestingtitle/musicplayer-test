@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' show get;
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:file_picker/file_picker.dart';
 
 void main() => runApp(MyApp());
 
@@ -35,24 +34,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _asyncMethod() async {
-    File file = await FilePicker.getFile();
-    var abc=file.length();
+    //comment out the next two lines to prevent the device from getting
+    // the image from the web in order to prove that the picture is
+    // coming from the device instead of the web.
+    var url = "http://104.47.146.107/Download/CreateLink/JMFPE73B"; // <-- 1
+    var response = await get(url); // <--2
     var documentDirectory = await getApplicationDocumentsDirectory();
-    var firstPath ='/storage/emulated/0/Android/data/com.test.music_sync/images';
-    var downloadLocation='/storage/emulated/0/Android/data/com.test';
-    //var filePathAndName = documentDirectory.path + '/images/pic.jpg';
-    var filePathAndName = downloadLocation + '/images/pic.jpg';
-    filePathAndName=file.path;
+    var firstPath = documentDirectory.path + "/images";
+    var filePathAndName = documentDirectory.path + '/images/pic.jpg';
     //comment out the next three lines to prevent the image from being saved
     //to the device to show that it's coming from the internet
     await Directory(firstPath).create(recursive: true); // <-- 1
-
-    //var url = "https://www.google.com.tr/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"; // <-- 1
-    //var response = await get(url);
-    //var fileTest = downloadLocation + '/images/pic.png';
-    //File file2 = new File(fileTest);             // <-- 2
-    //file2.writeAsBytesSync(response.bodyBytes);
-
+    File file2 = new File(filePathAndName);             // <-- 2
+    file2.writeAsBytesSync(response.bodyBytes);         // <-- 3
     setState(() {
       imageData = filePathAndName;
       dataLoaded = true;
@@ -64,7 +58,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     if (dataLoaded) {
       return Scaffold(
         appBar: AppBar(
