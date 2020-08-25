@@ -11,7 +11,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Test Image',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -85,7 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
       return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          centerTitle: true,
+
+          title: Text('AudioTestApp'),
         ),
         body: Center(
           child: Column(
