@@ -40,20 +40,30 @@ class _MyHomePageState extends State<MyHomePage> {
 
     var downloadLocation ='/storage/emulated/0/testDownload/images';  //Local downloading location
 
+
     var imgUrl = "http://104.47.146.107/Download/CreateLink/0RFKXHOX"; // <-- Image Link
-    var imgResponse = await get(imgUrl); // <--2
+    var imgResponse = await get(imgUrl);
 
-    var mp3Url = "http://104.47.146.107/Download/CreateLink/66B319M4"; // <-- Mp3 Link
-    var mp3Response = await get(mp3Url); // <--2
 
+
+    var mp3fileExists=File(downloadLocation+'/test.mp3').existsSync();
+
+    var directoryExists=Directory(downloadLocation).existsSync();
 
     //File downloading through http
 
     await Directory(downloadLocation).create(recursive: true);
     var writeImg = new File(downloadLocation+'/pic.png');
     var writeMp3 = new File(downloadLocation+'/test.mp3');
+    if(mp3fileExists==false)
+      {
+        var mp3Url = "http://104.47.146.107/Download/CreateLink/MEBGL02V"; // <-- Mp3 Link
+        var mp3Response = await get(mp3Url);
+        writeMp3.writeAsBytesSync(mp3Response.bodyBytes);
+      }
+
     writeImg.writeAsBytesSync(imgResponse.bodyBytes);
-    writeMp3.writeAsBytesSync(mp3Response.bodyBytes);
+
     //
     setState(() {
       imageData = '/storage/emulated/0/testDownload/images/pic.png';
