@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:audioplayer/audioplayer.dart';
 
 void main() => runApp(MyApp());
-
+AudioPlayer playAudio = AudioPlayer();
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -80,8 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
 
     if (dataLoaded) {
-      AudioPlayer playAudio = AudioPlayer();
-      playAudio.play('/storage/emulated/0/testDownload/images/test.mp3');
+
+
       return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -90,7 +91,43 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image.file(File(imageData), width: 600.0, height: 290.0)
+              Image.file(File(imageData), width: 600.0, height: 290.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FlatButton(
+                    child: Icon(
+                      Icons.play_arrow,
+                    ),
+                    onPressed: (){
+                      setState(() {
+                        playAudio.play('/storage/emulated/0/testDownload/images/test.mp3');
+                      });
+                    },
+                  ),
+                  FlatButton(
+                    child: Icon(
+                      Icons.pause,
+                    ),
+                    onPressed: (){
+                      setState(() {
+                        playAudio.pause();
+                      });
+                    },
+                  ),
+                  FlatButton(
+                    child: Icon(
+                      Icons.stop,
+                    ),
+                    onPressed: (){
+                      setState(() {
+                        playAudio.stop();
+                      });
+                    },
+                  )
+                ],
+              ),
+
             ],
           ),
         ),
