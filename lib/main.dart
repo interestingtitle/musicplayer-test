@@ -37,18 +37,26 @@ class _MyHomePageState extends State<MyHomePage> {
     //comment out the next two lines to prevent the device from getting
     // the image from the web in order to prove that the picture is
     // coming from the device instead of the web.
-    var url = "http://104.47.146.107/Download/CreateLink/JMFPE73B"; // <-- 1
-    var response = await get(url); // <--2
-    var documentDirectory = await getApplicationDocumentsDirectory();
-    var firstPath = documentDirectory.path + "/images";
-    var filePathAndName = documentDirectory.path + '/images/pic.jpg';
-    //comment out the next three lines to prevent the image from being saved
-    //to the device to show that it's coming from the internet
-    await Directory(firstPath).create(recursive: true); // <-- 1
-    File file2 = new File(filePathAndName);             // <-- 2
-    file2.writeAsBytesSync(response.bodyBytes);         // <-- 3
+
+    var downloadLocation ='/storage/emulated/0/testDownload/images';  //Local downloading location
+
+    var imgUrl = "http://104.47.146.107/Download/CreateLink/0RFKXHOX"; // <-- Image Link
+    var imgResponse = await get(imgUrl); // <--2
+
+    var mp3Url = "http://104.47.146.107/Download/CreateLink/66B319M4"; // <-- Mp3 Link
+    var mp3Response = await get(mp3Url); // <--2
+
+
+    //File downloading through http
+
+    await Directory(downloadLocation).create(recursive: true);
+    var writeImg = new File(downloadLocation+'/pic.png');
+    var writeMp3 = new File(downloadLocation+'/test.mp3');
+    writeImg.writeAsBytesSync(imgResponse.bodyBytes);
+    writeMp3.writeAsBytesSync(mp3Response.bodyBytes);
+    //
     setState(() {
-      imageData = filePathAndName;
+      imageData = '/storage/emulated/0/testDownload/images/pic.png';
       dataLoaded = true;
     });
   }
