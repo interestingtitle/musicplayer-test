@@ -25,6 +25,8 @@ dependencies:
   flutter:
     sdk: flutter
   permission_handler:
+  audioplayer:
+  audioplayer_web:
   file_picker: 1.13.3
   dio: 3.0.10
   path_provider:
