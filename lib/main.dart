@@ -1,135 +1,88 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+import 'package:http/http.dart' show get;
+import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'dart:async';
-import 'package:simple_permissions/simple_permissions.dart';
-import 'package:file_utils/file_utils.dart';
-import 'dart:math';
+import 'package:file_picker/file_picker.dart';
 
-void main() => runApp(Downloader());
+void main() => runApp(MyApp());
 
-class Downloader extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    title: "File Downloader",
-    debugShowCheckedModeBanner: false,
-    home: FileDownloader(),
-    theme: ThemeData(primarySwatch: Colors.blue),
-  );
-}
-
-class FileDownloader extends StatefulWidget {
-  @override
-  _FileDownloaderState createState() => _FileDownloaderState();
-}
-
-class _FileDownloaderState extends State<FileDownloader> {
-
-  final imgUrl = "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
-  bool downloading = false;
-  var progress = "";
-  var path = "No Data";
-  var platformVersion = "Unknown";
-  Permission permission1 = Permission.WriteExternalStorage;
-  var _onPressed;
-  static final Random random = Random();
-  Directory externalDir;
-  @override
-  void initState() {
-    super.initState();
-    downloadFile();
-  }
-
-
-  Future<void> downloadFile() async {
-    Dio dio = Dio();
-    bool checkPermission1 =
-    await SimplePermissions.checkPermission(permission1);
-    // print(checkPermission1);
-    if (checkPermission1 == false) {
-      await SimplePermissions.requestPermission(permission1);
-      checkPermission1 = await SimplePermissions.checkPermission(permission1);
-    }
-    if (checkPermission1 == true) {
-      String dirloc = "";
-      if (Platform.isAndroid) {
-        dirloc = "/sdcard/download/";
-      } else {
-        dirloc = (await getApplicationDocumentsDirectory()).path;
-      }
-
-      var randid = random.nextInt(10000);
-
-      try {
-        FileUtils.mkdir([dirloc]);
-        await dio.download(imgUrl, dirloc + randid.toString() + ".jpg",
-            onReceiveProgress: (receivedBytes, totalBytes) {
-              setState(() {
-                downloading = true;
-                progress =
-                    ((receivedBytes / totalBytes) * 100).toStringAsFixed(0) + "%";
-              });
-            });
-      } catch (e) {
-        print(e);
-      }
-
-      setState(() {
-        downloading = false;
-        progress = "Download Completed.";
-        path = dirloc + randid.toString() + ".jpg";
-      });
-    } else {
-      setState(() {
-        progress = "Permission Denied!";
-        _onPressed = () {
-          downloadFile();
-        };
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: Text('File Downloader'),
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Test Image',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
-      body: Center(
-          child: downloading
-              ? Container(
-            height: 120.0,
-            width: 200.0,
-            child: Card(
-              color: Colors.black,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  CircularProgressIndicator(),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Text(
-                    'Downloading File: $progress',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-          )
-              : Column(
+      home: MyHomePage(title: 'Test Image'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key key, this.title}) : super(key: key);
+  final String title;
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  initState() {
+    _asyncMethod();
+    super.initState();
+  }
+
+  _asyncMethod() async {
+    File file = await FilePicker.getFile();
+    var abc=file.length();
+    var documentDirectory = await getApplicationDocumentsDirectory();
+    var firstPath ='/storage/emulated/0/Android/data/com.test.music_sync/images';
+    var downloadLocation='/storage/emulated/0/Android/data/com.test';
+    //var filePathAndName = documentDirectory.path + '/images/pic.jpg';
+    var filePathAndName = downloadLocation + '/images/pic.jpg';
+    filePathAndName=file.path;
+    //comment out the next three lines to prevent the image from being saved
+    //to the device to show that it's coming from the internet
+    await Directory(firstPath).create(recursive: true); // <-- 1
+
+    //var url = "https://www.google.com.tr/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"; // <-- 1
+    //var response = await get(url);
+    //var fileTest = downloadLocation + '/images/pic.png';
+    //File file2 = new File(fileTest);             // <-- 2
+    //file2.writeAsBytesSync(response.bodyBytes);
+
+    setState(() {
+      imageData = filePathAndName;
+      dataLoaded = true;
+    });
+  }
+
+  String imageData;
+  bool dataLoaded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    if (dataLoaded) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Center(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(path),
-              MaterialButton(
-                child: Text('Request Permission Again.'),
-                onPressed: _onPressed,
-                disabledColor: Colors.blueGrey,
-                color: Colors.pink,
-                textColor: Colors.white,
-                height: 40.0,
-                minWidth: 100.0,
-              ),
+              Image.file(File(imageData), width: 600.0, height: 290.0)
             ],
-          )));
+          ),
+        ),
+      );
+    } else {
+      return CircularProgressIndicator(
+        backgroundColor: Colors.cyan,
+        strokeWidth: 5,
+      );
+    }
+  }
 }
