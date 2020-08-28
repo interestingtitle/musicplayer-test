@@ -35,14 +35,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _asyncMethod() async {
-    //comment out the next two lines to prevent the device from getting
-    // the image from the web in order to prove that the picture is
-    // coming from the device instead of the web.
+
 
     var downloadLocation ='/storage/emulated/0/testDownload/images';  //Local downloading location
 
 
-    var imgUrl = "http://104.47.146.107/Download/CreateLink/0RFKXHOX"; // <-- Image Link
+    var imgUrl = "http://51.145.250.32/Download/CreateLink/0RFKXHOX"; // <-- Image Link
     var imgResponse = await get(imgUrl);
 
 
@@ -58,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var writeMp3 = new File(downloadLocation+'/test.mp3');
     if(mp3fileExists==false)
       {
-        var mp3Url = "http://104.47.146.107/Download/CreateLink/MEBGL02V"; // <-- Mp3 Link
+        var mp3Url = "http://51.145.250.32/Download/CreateLink/MEBGL02V"; // <-- Mp3 Link
         var mp3Response = await get(mp3Url);
         writeMp3.writeAsBytesSync(mp3Response.bodyBytes);
       }
